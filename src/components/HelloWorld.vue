@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 defineProps<{ heading: string }>();
-import {RouterLink} from 'vue-router';
 import sudoku from '@/assets/sudoku.png';
 
 </script>
@@ -19,7 +18,6 @@ import sudoku from '@/assets/sudoku.png';
     </button>
 </template>
 
-
 <style scoped>
 
 h1{
@@ -35,7 +33,6 @@ button {
   font-size: 1.5em;
   margin-top: 0.5em;
 }
-
 
 </style>
 

@@ -1,38 +1,39 @@
 <script setup lang="ts">
-	import { BOARD_SIZE, boardIndexes, board, difficulty, originalBoard } from '@/board.ts'
-	import { getBorder } from '@/logic'
+	import { BOARD_SIZE, boardIndexes, board, difficulty, originalBoard } from '@/board.js';
+	import { getBorder } from '@/logic';
 
 
 </script>
 
 <template>
-	<p class="tag">{{ difficulty.toLocaleLowerCase() }}</p>
-	<p class="tag">wannabe solved</p>
-	<div class="container" :style="{ '--boardSize': BOARD_SIZE }">
-		<div v-for="i in boardIndexes" :key="i">
-			<div
-				v-for="j in boardIndexes"
-				:key="j"
-				class="cell"
-				:style="{ '--border': getBorder(i) }"
-			>
-				{{ board[j][i] == 0 ? '‎' : board[j][i] }}
+		<p class="tag">difficulty: {{ difficulty.toLocaleLowerCase() }}</p>
+		<p class="tag">wannabe solved</p>
+		<div class="container" :style="{ '--boardSize': BOARD_SIZE }">
+			<div v-for="i in boardIndexes" :key="i">
+				<div
+					v-for="j in boardIndexes"
+					:key="j"
+					class="cell"
+					:style="{ '--border': getBorder(i) }"
+				>
+					{{ board[j][i] == 0 ? '‎' : board[j][i] }}
+				</div>
 			</div>
 		</div>
-	</div>
-	<p class="tag">original</p>
-	<div class="container" :style="{ '--boardSize': BOARD_SIZE }">
-		<div v-for="i in boardIndexes" :key="i">
-			<div
-				v-for="j in boardIndexes"
-				:key="j"
-				class="cell"
-				:style="{ '--border': getBorder(i) }"
-			>
-				{{ originalBoard[j][i] == 0 ? '‎' : originalBoard[j][i] }}
+		<p class="tag">original</p>
+		<div class="container" :style="{ '--boardSize': BOARD_SIZE }">
+			<div v-for="i in boardIndexes" :key="i">
+				<div
+					v-for="j in boardIndexes"
+					:key="j"
+					class="cell"
+					:style="{ '--border': getBorder(i) }"
+				>
+					{{ originalBoard[j][i] == 0 ? '‎' : originalBoard[j][i] }}
+				</div>
 			</div>
 		</div>
-	</div>
+
 </template>
 
 <style scoped>

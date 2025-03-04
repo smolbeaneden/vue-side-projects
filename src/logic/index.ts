@@ -24,6 +24,8 @@ export function setBoardBoxes(board: Board): Board {
     return boardBoxes;
 }
 
+
+
 export function filterArray(arrayToFilter: number[], numbersToRemove: number[]): number[] {
     numbersToRemove = numbersToRemove.filter((num) => num != 0)
     for (let i = 0; i < numbersToRemove.length; i++) {

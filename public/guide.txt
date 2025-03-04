@@ -1,0 +1,3 @@
+automate import:
+unplugin-auto-import
+unplugin-vue-components  - automate importing components
