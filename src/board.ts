@@ -2,7 +2,7 @@
 //add type tree
 import type { Board } from '@/logic'
 import { filterArray, setBoardBoxes, setBoardColumns } from '@/logic'
-import { rows, cols, boxes } from '@/logic'   // options left, organized differently
+//import { rows, cols, boxes } from '@/logic'   // options left, organized differently
 
 const BOARD_SIZE = 9;
 export { BOARD_SIZE }
@@ -49,7 +49,6 @@ async function fetchBoard(){
 	return true;
 }
 
-
 await fetchBoard()
 
 boardColumns.value = setBoardColumns(board.value)
@@ -91,13 +90,13 @@ function lastPossibleNumber(): void {
 						//const setCell = () =>{board.value[i][j] = cellOptions[0]}
 						//setTimeout(setCell, 1000);
 						board.value[i][j] = cellOptions[0];
-						boardBoxes.value[Math.floor(j / 3) * 3 + Math.floor(i / 3) * 3][(i%3)*3 + j%3] = val;
+						boardBoxes.value[Math.floor(j / 3) * 3 + Math.floor(i / 3) * 3][(i % 3)*3 + j%3] = val;
 						boardColumns.value[j][i] = val;
 						currBoard.value[i][j] = cellOptions[0];
 						test = 0;
 						if (checkSolved()) {
-							alert('Solved board;)')
-							return
+							alert('Board solved ;)')
+							return;
 						}
 					}
 				} else {
@@ -106,12 +105,10 @@ function lastPossibleNumber(): void {
 			}
 		}
 	}
-
-
 }
 
-
 const boardWentThrough = ref<Options[][][]>([]) //make it a board! of empty places for each cell. easily delete when going backwards
+
 //list all the wrong paths? -no!! its different cause cells affect each other
 for (let i = 0; i < BOARD_SIZE; i++) {
 	boardWentThrough.value.push([])
@@ -123,7 +120,7 @@ for (let i = 0; i < BOARD_SIZE; i++) {
 function notGoneThrough(x: number, y: number): boolean {
 	for (const [index, row] of boardWentThrough.value.entries()) {
 		row.map((optionConsidered) => {
-			const currOption: Options | undefined = optionConsidered.pop()
+			const currOption: Options | undefined = optionConsidered[0]
 			if ( currOption && x == currOption.x && y == currOption.y ) {
 				return false
 			}
@@ -134,14 +131,14 @@ function notGoneThrough(x: number, y: number): boolean {
 }
 
 function findLeastOptionsCell() {
-	const minOptions = ref<Options>() // point with least options
+	const minOptions = ref<Options>() // point with the least amount of options
 	minOptions.value = {
 		x: 0,
 		y: 0,
 		minLength: 9,
 	}
-	for (const [i] of options.value.entries()) {
-		for (const [j, cellOptions] of options.value[i].entries()) {
+	for (const [i, row] of options.value.entries()) {
+		for (const [j, cellOptions] of row.entries()) {
 			if (
 				cellOptions.length < minOptions.value.minLength &&
 				cellOptions.length != 1 &&
@@ -172,29 +169,81 @@ const getOptionsLengths = () => {
 	}
 }
 
+//make an interface for elements in path
+// if we tried all options in the element, go back until we find an element in which there are options we didn't try yet.
+interface OptionTried {
+	optionValue: number,
+	wentThrough: boolean,
+	currentBoard: Board
+}
+interface PathElement{
+	x: number,
+	y: number,
+	numberOfOptions: number,
+	options: OptionTried[]
+}
 
-const path = ref<Board>([])
+const path = ref<PathElement[]>([])
 
 function trialAndError(): void {
 	const leastOptionsCell: Options = findLeastOptionsCell()
-	const cellOptionsArray: number[] = options.value[leastOptionsCell.x][leastOptionsCell.y]
+	const cellOptionsArray: number[] = options.value[leastOptionsCell.x][leastOptionsCell.y] // options
+
+	const currPathElement= ref<PathElement>({
+		x: leastOptionsCell.x,
+		y: leastOptionsCell.y,
+		numberOfOptions: cellOptionsArray.length,
+		options: [],
+	})
+	for (const [index, cell] of cellOptionsArray.entries()){
+		currPathElement.value.options.push({optionValue: cell, wentThrough: false, currentBoard: []})
+	}
+	path.value.push(currPathElement.value);
 
 	for (const [index, cell] of cellOptionsArray.entries()) {
-		board.value[leastOptionsCell.x][leastOptionsCell.y] = cell
-		if (checkWorking()) {
-			path.value.push([leastOptionsCell.x, leastOptionsCell.y, index])
-			lastPossibleNumber()
-			//trialAndError()
-		} else {
-			//clear
-			//go back
+		treeChild(index, cell, currPathElement.value.y, currPathElement.value.x);
+		//make a function
+		// board.value[currPathElement.value.x][currPathElement.value.y] = cell;
+		// path.value[path.value.length -1].options[index].wentThrough = true;
+		// path.value[path.value.length -1].options[index].currentBoard = structuredClone(board.value);
+
+		// if (checkWorking()){
+		// 	gameOn();
+		// } else{
+		// 	if (index + 1 == path.value[path.value.length -1].options.length) {
+		// 		path.value.pop();
+		// 		for (let i = 0; i < path.value[path.value.length-1].options.length; i++) {
+		// 			if(path.value[path.value.length - 1].options[i].wentThrough == false){
+		// 				treeChild(i, path.value[path.value.length - 1].options[i].optionValue)
+		// 			}
+		// 		}
+		//
+		// 		//change to index
+		// 		//trialAndError()
+		// 		//go back cell?
+		// 	}
+		// }
+		//clear!!!
+	}
+
+	function treeChild(index: number, cellValue: number, y: number, x: number): void{
+		board.value[y][x] = cellValue;
+		path.value[path.value.length -1].options[index].wentThrough = true;
+		path.value[path.value.length -1].options[index].currentBoard = structuredClone(toRaw(board.value));
+
+		if (checkWorking()){
+			gameOn();
+		} else{
 			if (index + 1 == cellOptionsArray.length) {
-				//change to index
-				//trialAndError()
-				//go back cell?
+				path.value.pop();
+				for (let i = 0; i < path.value[path.value.length-1].options.length; i++) {
+					if(!path.value[path.value.length - 1].options[i].wentThrough){
+						treeChild(i, path.value[path.value.length - 1].options[i].optionValue, path.value[path.value.length - 1].y, path.value[path.value.length - 1].x)
+					}
+				}
+				return;
 			}
 		}
-		//clear!!!
 	}
 
 	function checkWorking() {
@@ -226,17 +275,14 @@ const checkSolved = () => {
 }
 
 //let's go!
-const gameOn = () => {
+function gameOn(): void {
 	lastPossibleNumber()
 	if (checkSolved()) {
 		return;
 	}
-	trialAndError()
+	trialAndError();
 }
-gameOn()
-
-
-
+gameOn();
 
 function getOptions(y: number, x: number): number[] {
 	// const arr: number[][] = [rowsOptions.value[y], colsOptions.value[x], boxesOptions.value[Math.floor(y / 3) * 3 + Math.floor(x / 3)]];
@@ -249,5 +295,3 @@ function getOptions(y: number, x: number): number[] {
 	])
 	return options.value
 }
-
-
