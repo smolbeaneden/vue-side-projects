@@ -1,3 +1,19 @@
 automate import:
 unplugin-auto-import
 unplugin-vue-components  - automate importing components
+
+
+
+
+-- PLAN --
+
+method #1 :
+    last option number
+method #2 :
+    last possible number
+    (4, 9) (4, 9) (6)
+
+
+method #3 :
+    Tree, retreat if wrong
+

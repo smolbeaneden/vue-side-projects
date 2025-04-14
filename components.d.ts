@@ -8,9 +8,21 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    GamePopUp: typeof import('./src/components/Typing Components/GamePopUp.vue')['default']
+    GameTimer: typeof import('./src/components/Typing Components/GameTimer.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    HomePage: typeof import('./src/components/HomePage.vue')['default']
+    Loading: typeof import('@/components/LoadingPage.vue')['default']
+    LoadingPage: typeof import('./src/components/LoadingPage.vue')['default']
+    NavBar: typeof import('./src/components/NavBar.vue')['default']
+    OptionsBar: typeof import('./src/components/Typing Components/OptionsBar.vue')['default']
+    PracticeText: typeof import('./src/components/Typing Components/PracticeText.vue')['default']
+    ProjectHomeDisplay: typeof import('./src/components/ProjectHomeDisplay.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SudokuBoard: typeof import('./src/components/SudokuBoard.vue')['default']
+    TextArea: typeof import('@/components/Typing Components/TextInput.vue')['default']
+    TextInput: typeof import('./src/components/Typing Components/TextInput.vue')['default']
+    TypingPractice: typeof import('./src/components/TypingPractice.vue')['default']
   }
 }

@@ -1,23 +1,27 @@
 export type Board = number[][];
+import {  SQRT_BOARD_SIZE, EMPTY_CELL, board , BOARD_SIZE} from '@/logic/boardAlgorithm.ts';
 
-export function setBoardColumns(board: Board): Board {
+
+
+export function setBoardColumns(): Board {
     const boardColumns: Board = [];
-    for (let i = 0; i < board.length; i++) {
-        boardColumns.push([])
-        for (let j = 0; j < board.length; j++) {
-            boardColumns[i].push(board[j][i]);
-        }
-    }
+
+	for( const [i, row] of board.value.entries() ) {
+		boardColumns.push([])
+		for( const [j] of row.entries() ) {
+			boardColumns[i].push(board.value[j][i]);
+		}
+	}
     return boardColumns;
 }
 
-export function setBoardBoxes(board: Board): Board {
+export function setBoardBoxes(): Board {
     const boardBoxes: Board = [];
-    for (let i = 0; i < Math.pow((board.length / 3), 2); i++) {
+    for (let i = 0; i < BOARD_SIZE; i++) {
         boardBoxes.push([]);
-        for (let j = 0; j < board.length / 3; j++) {
-            for (let k = 0; k < board.length / 3; k++) {
-                boardBoxes[i].push(board[j + Math.floor(i / 3) * 3][k + (i % 3) * 3]);
+        for (let j = 0; j < SQRT_BOARD_SIZE; j++) {
+            for (let k = 0; k < SQRT_BOARD_SIZE; k++) {
+                boardBoxes[i].push(board.value[j + Math.floor(i / SQRT_BOARD_SIZE) * SQRT_BOARD_SIZE][k + (i % SQRT_BOARD_SIZE) * SQRT_BOARD_SIZE]);
             }
         }
     }
@@ -27,16 +31,16 @@ export function setBoardBoxes(board: Board): Board {
 
 
 export function filterArray(arrayToFilter: number[], numbersToRemove: number[]): number[] {
-    numbersToRemove = numbersToRemove.filter((num) => num != 0)
-    for (let i = 0; i < numbersToRemove.length; i++) {
-        arrayToFilter = arrayToFilter.filter((num) => num != numbersToRemove[i])
-    }
+    numbersToRemove = numbersToRemove.filter((num) => num != 	EMPTY_CELL);
+	for(const [index] of numbersToRemove.entries()) {
+		arrayToFilter = arrayToFilter.filter((num) => num != numbersToRemove[index])
+	}
     return arrayToFilter;
 }
 
 
-export const getBorder = (index: number) => {
-  if (index % 3 == 0){
+export function getBorder (index: number) :string {
+  if (index % SQRT_BOARD_SIZE == 0){
     return "2px"
   }
   else{
@@ -45,17 +49,21 @@ export const getBorder = (index: number) => {
 }
 
 
-const knownOptions: number[] = [1,2,3,4,5,6,7,8,9];
-const rows: Board = []
-const cols: Board = [];
-const boxes: Board = []
-
-for (let i = 0; i < Math.pow(9 / 3, 2); i++) {
-  if (i < 9) {
-    rows.push(knownOptions)
-    cols.push(knownOptions)
-  }
-  boxes.push(knownOptions)
-}
-
-export { rows, cols, boxes };
+//
+// const rows: Board = []
+// const cols: Board = [];
+// const boxes: Board = []
+//
+// const knownOptions: number[] = [];
+//
+// for(let i = 1; i <= BOARD_SIZE; i++){
+// 	knownOptions.push(i);
+// }
+//
+// for (let j = 0; j < BOARD_SIZE; j++) {
+// 	rows.push(knownOptions)
+// 	cols.push(knownOptions)
+// 	boxes.push(knownOptions)
+// }
+//
+// export { rows, cols, boxes };

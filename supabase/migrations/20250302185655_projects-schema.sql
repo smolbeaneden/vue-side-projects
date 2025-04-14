@@ -13,4 +13,3 @@ create table
                  collaborators text array default array[]::varchar[] not null
 );
 
-
