@@ -15,8 +15,9 @@ import {
 
 	input{
 		background-color: rgba(0, 0, 0, 0.3);
-		font-size: 1.5em;
+		font-size: 1.7em;
 		position: relative;
+		display: flex;
 		left: 0;
 		right: 0;
 		width: 60rem;

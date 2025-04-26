@@ -1,9 +1,26 @@
 export const text = ref<string>('');
 export const originalText = ref<string>('');
 export const userInput = ref<string>('');
+export const key = ref<string>('');
 export const wordIndex = ref<number>(0);
 export const letterIndex = ref<number>(0);
 export const nextLetterIndex = ref<number>(0);
+export const currLetter = ref<string>();
+export const backspacePressed = ref<boolean>(false);
+export const spacePressed = ref<boolean>(false);
+export const status = ref<string>("hey");
+interface Index {
+	wordIndex: number,
+	letterIndex: number
+}
+export const lastIndex= ref<Index>({wordIndex: 0 , letterIndex: 0});
+export const changeIndexes = ref<boolean>(true);
+export const FONT_SIZE = ref<string>("1.7em")
+const defaultColor = "white";
+const matchColor = "#7eff09";
+const wrongColor = "red";
+const overColor = "yellow";
+
 
 async function fetchText(): Promise<boolean>{
 	try {
@@ -16,7 +33,6 @@ async function fetchText(): Promise<boolean>{
 	}
 	return true;
 }
-
 await fetchText();
 
 
@@ -31,14 +47,10 @@ function wordLettersArray(wordArray: readonly string[]):string[][] {
 	return array;
 }
 
-
-
 // Example: [[s,e,a],[m,e,o,w],[p,i,z,z,a]]
-const userInputWordsLettersArray = ref<string[][]>(wordLettersArray(structuredClone(toRaw(userInput.value)).split(' ')));
+export const userInputWordsLettersArray = ref<string[][]>(wordLettersArray(structuredClone(toRaw(userInput.value)).split(' ')));
 const originalTextWordsLettersArray = ref<string[][]>(wordLettersArray(structuredClone(toRaw(originalText.value)).split(' ')));
 export const textWordsLettersArray = ref<string[][]>(wordLettersArray(structuredClone(toRaw(text.value)).split(' ')));
-
-
 
 // { letter, color }
 interface LetterColor {
@@ -51,43 +63,36 @@ export const textWordsLettersArrayColor = ref<LetterColor[][]>([]);
 for (const [i ,word] of textWordsLettersArray.value.entries()) {
 	textWordsLettersArrayColor.value.push([]);
 	for (const [ ,letter] of word.entries()) {
-		textWordsLettersArrayColor.value[i].push({letter: letter, color: "gray"});
+		textWordsLettersArrayColor.value[i].push({letter: letter, color: defaultColor});
 	}
 }
 // Done :)
 
-
 // handling input:
-
-interface Index {
-	wordIndex: number,
-	letterIndex: number
-}
-
-
-const lastIndex = ref<Index>({wordIndex: 0 , letterIndex: 0})
-
-
 export function handleInput(): void {
-
 	console.log("Handling input");
-
+	status.value = "none";
 	//Organizing new input in Array of words:
 	userInputWordsLettersArray.value = (wordLettersArray(structuredClone(toRaw(userInput.value)).split(' ')));
 
 	//word and letter indexes
-	wordIndex.value = userInputWordsLettersArray.value.length > 0 ? userInputWordsLettersArray.value.length - 1 : 0;
-	letterIndex.value = (userInputWordsLettersArray.value[wordIndex.value]?.length) ?
-		userInputWordsLettersArray.value[wordIndex.value].length -1 : 0;
+	if(changeIndexes.value){
+		wordIndex.value = userInputWordsLettersArray.value.length > 0 ? userInputWordsLettersArray.value.length - 1 : 0;
+		letterIndex.value = (userInputWordsLettersArray.value[wordIndex.value]?.length) ?
+			userInputWordsLettersArray.value[wordIndex.value].length -1 : 0;
+
+	}
+	changeIndexes.value = true;
 
 	//for cursor:
 	nextLetterIndex.value = (userInputWordsLettersArray.value[wordIndex.value]?.length) ?
 		userInputWordsLettersArray.value[wordIndex.value].length : 0;
 
 	//current letter
-	const currLetter = userInputWordsLettersArray.value[wordIndex.value][letterIndex.value]
+	currLetter.value = userInputWordsLettersArray.value[wordIndex.value]?.length? userInputWordsLettersArray.value[wordIndex.value][letterIndex.value]:
+		undefined;
 
-	console.log(currLetter)
+	console.log(currLetter.value)
 	console.log([wordIndex.value, letterIndex.value]);
 	console.log("original " + originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value])
 	console.log(textWordsLettersArrayColor.value)
@@ -96,55 +101,65 @@ export function handleInput(): void {
 
 		console.log("same wordIndex.value", wordIndex.value);
 
-		if (letterIndex.value == 0){
-			if (currLetter == originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value]) {
-				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "green";
+		if (letterIndex.value == 0 && !backspacePressed.value) {
+			status.value = "i = 0";
+			if (currLetter.value == originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value]) {
+				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = matchColor;
+			}
+			else if(userInputWordsLettersArray.value[wordIndex.value].length>0){
+				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = wrongColor;
 			}
 			else{
-				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "gray";
+				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = defaultColor;
 			}
 		}
-		//problema
+		//problema?
 		else if (letterIndex.value > lastIndex.value.letterIndex){ //going forward
-			console.log("going forward");
+			status.value = "going forward";
 			if (letterIndex.value > (originalTextWordsLettersArray.value[wordIndex.value].length -1)) { //HERE
-				console.log("orange");
-				textWordsLettersArray.value[wordIndex.value].push(currLetter)
-				textWordsLettersArrayColor.value[wordIndex.value].push({letter: currLetter, color: "orange"})
+				console.log(overColor);
+				textWordsLettersArray.value[wordIndex.value].push(currLetter.value)
+				textWordsLettersArrayColor.value[wordIndex.value].push({letter: currLetter.value, color: overColor})
 			}
-			else if (currLetter == originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value]) {
-				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "green";
+			else if (currLetter.value == originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value]) {
+				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = matchColor;
 			}
 			else {
-				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "red";
+				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = wrongColor;
 			}
 		}
-		else { //HERE
+		else { //backtrack
+			status.value="backtrack"
 			if (letterIndex.value >= (originalTextWordsLettersArray.value[wordIndex.value].length - 1)) { //going back when beyond word
 				textWordsLettersArray.value[wordIndex.value].splice(letterIndex.value+1, 1);
 				textWordsLettersArrayColor.value[wordIndex.value].splice(letterIndex.value+1, 1);
 			}
 			else {
-				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value+1].color = "gray";
+				status.value="backtrack white"
+				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value+1].color = defaultColor;
+				if(nextLetterIndex.value ==0){
+					textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = defaultColor;
+				}
 			}
 		}
 	}
 	// else {
 	// 	if (letterIndex.value == 0){
-	// 		if (currLetter == originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value]) {
-	// 			textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "green";
+	// 		if (currLetter.value == originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value]) {
+	// 			textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = matchColor;
 	// 		}
 	// 		else{
-	// 			textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "gray";
+	// 			textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = defaultColor;
 	// 		}
 	// 	}
-	// 	else if(originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value] == currLetter){
-	// 		textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "green";
+	// 	else if(originalTextWordsLettersArray.value[wordIndex.value][letterIndex.value] == currLetter.value){
+	// 		textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = matchColor;
 	// 	}
 	// 	else {
-	// 		textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = "red";
+	// 		textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = wrongColor;
 	// 	}
 	// }
 	lastIndex.value = {wordIndex: wordIndex.value, letterIndex: letterIndex.value};
+	backspacePressed.value = false;
 	return
 }

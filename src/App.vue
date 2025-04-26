@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { supabase } from "@/lib/supabaseClient";
-import Loading from "@/components/LoadingPage.vue"
+import Loading from "@/components/general components/LoadingPage.vue"
 
 console.log(supabase);
 </script>

@@ -4,7 +4,7 @@
 
 <template>
 	<div class="loading"> Loading... </div>
-	<img src="@/assets/loading2.gif" alt="loading"/>
+	<img src="../../assets/loading2.gif" alt="loading"/>
 </template>
 
 <style scoped>

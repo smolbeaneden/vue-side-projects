@@ -4,8 +4,12 @@
 		textWordsLettersArrayColor,
 		wordIndex,
 		letterIndex,
-		nextLetterIndex
+		nextLetterIndex,
+		userInputWordsLettersArray
 	} from "@/logic/typingLogic.ts"
+	import {
+		FONT_SIZE
+	} from '@/logic/typingLogic.ts'
 
 
 	console.log(textWordsLettersArray.value);
@@ -14,6 +18,9 @@
 		if(wIndex == wordIndex.value && lIndex == nextLetterIndex.value &&  lIndex !== (textWordsLettersArrayColor.value[wIndex].length)){
 			return "underline"
 		}
+		// else if (wIndexuserInputWordsLettersArray.value[wIndex-1].pop()==" "){
+		//
+		// }
 		else{
 			return "none"
 		}
@@ -28,12 +35,12 @@
 </script>
 
 <template>
-	<div class="typing-area">
+	<div class="typing-area" :style="{ '--font-size': FONT_SIZE }">
 		<div v-for="(word, wordIndex) in textWordsLettersArrayColor" :key="wordIndex" class="letter">
 			<div v-for="(letter, letterIndex) in word"
 				 :key="`${wordIndex},${letterIndex}`"
 				 class="letter"
-				 :style="{'color': letter.color, 'text-decoration-line': isCurrent(wordIndex, letterIndex)}"
+				 :style="{ 'color': letter.color, 'text-decoration-line': isCurrent(wordIndex, letterIndex)}"
 			>
 				{{ letter.letter }}
 			</div>
@@ -47,10 +54,13 @@
 </template>
 
 <style scoped>
+	:root{
+		--font-size: FONT_SIZE
+		}
 
 	.typing-area {
-		background-color: rgba(0, 0, 0, 0.24);
-		font-size: 1.5em;
+		background-color: rgba(19, 16, 16, 0.51);
+		font-size: var(--font-size);
 		position: relative;
 		left: 0;
 		right: 0;

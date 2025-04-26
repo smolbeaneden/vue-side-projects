@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { BOARD_SIZE, boardIndexes, board, difficulty, originalBoard, startOptions } from '@/logic/boardAlgorithm.ts';
-	import { getBorder } from '@/logic';
+	import { getBorder } from '@/logic/boardLogic.ts';
 	import { isLoading } from '@/logic/boardAlgorithm.ts'
 </script>
 

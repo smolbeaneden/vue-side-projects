@@ -1,7 +1,7 @@
 // import { ref, onMounted } from 'vue'
 //add type tree
-import type { Board } from '@/logic/index.ts'
-import { filterArray, setBoardBoxes, setBoardColumns } from '@/logic/index.ts'
+import type { Board } from '@/logic/boardLogic.ts'
+import { filterArray, setBoardBoxes, setBoardColumns } from '@/logic/boardLogic.ts'
 //import { rows, cols, boxes } from '@/logic'   // options left, organized differently
 
 export const BOARD_SIZE = 9;
@@ -53,7 +53,6 @@ await fetchBoard()
 //arranging by boxes and columns
 boardColumns.value = setBoardColumns()
 boardBoxes.value = setBoardBoxes()
-
 
 
 function getOptions(y: number, x: number): number[] {

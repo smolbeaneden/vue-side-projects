@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import ProjectHomeDisplay from '@/components/ProjectHomeDisplay.vue'
+import ProjectHomeDisplay from '@/components/general components/ProjectHomeDisplay.vue'
 
 defineProps<{ heading: string }>();
 import sudoku from '@/assets/sudoku.png';
