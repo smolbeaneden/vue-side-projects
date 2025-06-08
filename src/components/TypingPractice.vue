@@ -20,10 +20,10 @@ import {
 
 		<OptionsBar/>
 		<PracticeText/>
-<!--		<div class="input">Input:{{ [userInput] }}</div>-->
-<!--		<div class="input">{{[lastIndex, currLetter, wordIndex, letterIndex, nextLetterIndex] }}</div>-->
-<!--		<div class="input"> {{ status }}</div>-->
-<!--		<div class="input"> {{ key }}</div>-->
+		<div class="input">Input:{{ [userInput] }}</div>
+		<div class="input">{{[lastIndex, currLetter, wordIndex, letterIndex, nextLetterIndex] }}</div>
+		<div class="input"> {{ status }}</div>
+		<div class="input"> {{ key }}</div>
 	</div>
 
 </template>

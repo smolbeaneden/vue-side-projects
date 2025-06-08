@@ -25,11 +25,10 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  display: flex;
+  margin-top: 0;
+
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+
   font-family: monospace;
   align-items: center;
 
@@ -62,7 +61,6 @@ button:focus-visible {
 
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
   place-items: center;
   text-align: center;

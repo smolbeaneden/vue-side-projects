@@ -18,3 +18,9 @@
 		</router-link>
 	</button>
 </template>
+
+<style scoped>
+.projectHeading {
+	font-family: monospace;
+	}
+</style>

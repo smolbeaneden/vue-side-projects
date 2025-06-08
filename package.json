@@ -20,7 +20,11 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "lodash": "^4.17.21",
+    "shopify-api-node": "^3.15.0",
+    "spotify-web-api-node": "^5.0.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },

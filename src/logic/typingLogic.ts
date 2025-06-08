@@ -80,10 +80,13 @@ export function handleInput(): void {
 		wordIndex.value = userInputWordsLettersArray.value.length > 0 ? userInputWordsLettersArray.value.length - 1 : 0;
 		letterIndex.value = (userInputWordsLettersArray.value[wordIndex.value]?.length) ?
 			userInputWordsLettersArray.value[wordIndex.value].length -1 : 0;
-
 	}
 	changeIndexes.value = true;
-
+	if(wordIndex.value == (textWordsLettersArrayColor.value.length-1) && letterIndex.value == (textWordsLettersArrayColor.value[textWordsLettersArrayColor.value.length-1].length-1)){
+		alert("great u done")
+		document.removeEventListener('keydown', handleKeyPress)
+		return;
+	}
 	//for cursor:
 	nextLetterIndex.value = (userInputWordsLettersArray.value[wordIndex.value]?.length) ?
 		userInputWordsLettersArray.value[wordIndex.value].length : 0;
@@ -112,6 +115,9 @@ export function handleInput(): void {
 			else{
 				textWordsLettersArrayColor.value[wordIndex.value][letterIndex.value].color = defaultColor;
 			}
+		}
+		else if(wordIndex.value < lastIndex.value.wordIndex){
+			textWordsLettersArrayColor.value[lastIndex.value.wordIndex][0].color = defaultColor;
 		}
 		//problema?
 		else if (letterIndex.value > lastIndex.value.letterIndex){ //going forward
@@ -163,3 +169,37 @@ export function handleInput(): void {
 	backspacePressed.value = false;
 	return
 }
+
+
+
+
+
+const lastKey = ref<string>('')
+
+
+export function handleKeyPress(event: KeyboardEvent): void {
+	spacePressed.value = false
+	key.value = event.key
+	if (event.key.length == 1 && event.key != " ") {
+		userInput.value += event.key;
+		lastKey.value = event.key;
+	}
+	else if (event.key=== "Backspace") {
+		userInput.value = userInput.value.substring(0, userInput.value.length - 1);
+		backspacePressed.value = true;
+	}
+	else if (event.key === " " && lastKey.value != " ") {
+		lastKey.value = event.key;
+		userInput.value += event.key;
+		spacePressed.value = true
+		wordIndex.value++
+		letterIndex.value = 0;
+		changeIndexes.value = false
+		console.log("space")
+	}
+	else {
+		return
+	}
+	handleInput()
+}
+

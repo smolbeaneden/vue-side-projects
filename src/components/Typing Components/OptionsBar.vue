@@ -5,7 +5,7 @@
 
 <template>
 	<nav>
-		<HomeButton class="control"/>
+		<HomeButton class="control" buttonColor="white"/>
 		<div class="control">
 			<div class="headText">Font Size</div>
 			<br/>
@@ -13,7 +13,6 @@
 				v-model="FONT_SIZE"
 				id="text size"
 				name="text size"
-
 			>
 				<option value="1.3em">small</option>
 				<option selected value="1.7em">medium</option>
@@ -63,6 +62,8 @@
 		}
 
 	select:hover {
-		border-color: #646cff;
+		border-color: #ffffff;
 		}
+
+
 </style>
